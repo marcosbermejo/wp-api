@@ -1,0 +1,30 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "airbnb-base",
+    "airbnb-typescript/base"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-console": "off",
+    "no-underscore-dangle":  ["error", { "allow": ["_id"] }],
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": ["variable"],
+        "format": ["camelCase", "PascalCase", "UPPER_CASE"],
+        "filter": {
+          "regex": "^_id$",
+          "match": false
+        }
+      }
+    ]
+  }
+}
