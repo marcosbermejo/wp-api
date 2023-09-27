@@ -226,7 +226,51 @@ const matches: MatchesApiResponse = {
         club: { data: { type: "club", id: "c2" } },
         registrable: { data: { type: "tournament", id: "t1" } }
       }
-    }
+    },
+    {
+      type: "matchreferee",
+      id: "mr1",
+      attributes: {
+        attendance: "confirmed",
+        published: true,
+      },
+      relationships: {
+        match: { data: { type: "match", id: "m1" } },
+        license: { data: { type: "license", id: "l1" } },
+        office: { data: { type: "office", id: "o1" } }
+      }
+    },
+    {
+      type: "license",
+      id: "l1",
+      attributes: {
+        type: "referee",
+        number: null
+      },
+      relationships: {
+        category: { data: null },
+        club: { data: { type: "club", id: "c1" } },
+        delegation: { data: null },
+        discipline: { data: { type: "discipline", id: "d1" } },
+        form: { data: { type: "form", id: "f1" } },
+        office: { data: { type: "office", id: "o1" } },
+        profile: { data: { type: "profile", id: "p1" } },
+        refereecategory: { data: null },
+        season: { data: { type: "season", id: "s1" } }
+      }
+    },
+    {
+      type: "profile",
+      id: "p1",
+      attributes: {
+        birthdate: "1985-12-25",
+        first_name: "Marcos",
+        gender: "male",
+        last_name: "Bermejo",
+        nationality: "es",
+        number: "08031"
+      }
+    },
   ]
 }
 

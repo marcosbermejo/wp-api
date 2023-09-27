@@ -2,10 +2,9 @@ import {
   ApiRelationship,
   ApiRelationshipMultiple,
   CategoryApiResponseData,
-  DelegationApiResponseData,
 } from '../api/ApiResponse';
 
-import { TeamApiResponseData } from '../team/ApiResponse';
+import { ClubApiResponseData, DelegationApiResponseData, TeamApiResponseData } from '../team/ApiResponse';
 
 export interface TournamentsApiResponse {
   data: Array<TournamentApiResponseData>;
@@ -33,20 +32,5 @@ export interface TournamentApiResponseData {
     manager: ApiRelationship,
     season: ApiRelationship,
     teams: ApiRelationshipMultiple
-  }
-}
-
-export interface ClubApiResponseData {
-  id: string;
-  type: 'club';
-  attributes: {
-    code: string
-    email: string
-    name: string
-    phone: string
-  },
-  relationships: {
-    delegation: ApiRelationship,
-    manager: ApiRelationship,
   }
 }

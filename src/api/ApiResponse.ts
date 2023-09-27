@@ -12,14 +12,6 @@ export interface ApiRelationshipMultiple {
   }> | null
 }
 
-export interface DelegationApiResponseData {
-  id: string;
-  type: 'delegation';
-  attributes: {
-    name: string,
-  }
-}
-
 export interface CategoryApiResponseData {
   id: string;
   type: 'category';

@@ -7,6 +7,8 @@ import { metricsMiddleware, metricsController } from './metrics';
 import errorHandler from './errors';
 
 import tournamentController from './tournament/Controller';
+import groupController from './group/Controller';
+import matchController from './match/Controller';
 
 export default async function bootstrap() {
   const app: Application = express();
@@ -21,6 +23,8 @@ export default async function bootstrap() {
   }));
 
   app.use('/tournaments', metricsMiddleware, tournamentController);
+  app.use('/groups', metricsMiddleware, groupController);
+  app.use('/matches', metricsMiddleware, matchController);
   app.use('/metrics', metricsController);
 
   app.use(errorHandler);

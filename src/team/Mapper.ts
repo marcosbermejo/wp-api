@@ -1,5 +1,5 @@
-import { TeamsApiResponse } from './ApiResponse';
-import Team from './Model';
+import { ClubApiResponseData, TeamsApiResponse } from './ApiResponse';
+import { Club, Delegation, Team } from './Model';
 
 const clubIdTranslations: Record<string, string> = {
   '4977195': '4979833',
@@ -34,11 +34,55 @@ export default class TeamMapper {
     return this.data.data.map(({ id, attributes, relationships }): Team => {
       let clubId = relationships.club.data?.id ?? ''
       clubId = clubIdTranslations[clubId] ?? clubId
-      return {
+      const team: Team = {
         id,
         name: attributes.name,
         image: `${process.env.CDN_URL}/logos/${clubId}.jpg`
       }
+
+      if (clubId) {
+        const club = this.findClub(clubId)
+        if (club) team.club = club
+      }
+
+      return team
     });
+  }
+
+  private findClub(clubId: string): Club | undefined {
+    if (!clubId) return undefined;
+
+    const data = this.data.included.find(entity =>
+      entity.type === 'club' &&
+      entity.id === clubId
+    ) as ClubApiResponseData | undefined
+
+    if (!data) return undefined
+
+    const club: Club = {
+      id: data.id,
+      name: data.attributes.name,
+      image: `${process.env.CDN_URL}/logos/${data.id}.jpg`
+    }
+
+    if (data.relationships.delegation.data?.id) {
+      const delegation = this.findDelegation(data.relationships.delegation.data.id)
+      if (delegation) club.delegation = delegation
+    }
+
+    return club
+  }
+
+  private findDelegation(delegationId: string): Delegation | undefined {
+    if (!delegationId) return undefined;
+
+    const data = this.data.included.find(entity =>
+      entity.type === 'delegation' &&
+      entity.id === delegationId
+    )
+    return data ? {
+      id: data.id,
+      name: data.attributes.name,
+    } as Delegation : undefined
   }
 }

@@ -1,7 +1,7 @@
 import { parse } from "date-fns";
 import { FaceoffApiResponseData, RoundsApiResponse } from "./ApiResponse";
 import { Faceoff, Round } from "./Model";
-import Team from "../team/Model";
+import {Team} from "../team/Model";
 import { TeamApiResponseData } from "../team/ApiResponse";
 import TeamMapper from "../team/Mapper";
 
@@ -66,7 +66,7 @@ export default class RoundMapper {
     ) as TeamApiResponseData | undefined
 
     if (!data) return undefined
-    const mapper = new TeamMapper({ data: [data] });
+    const mapper = new TeamMapper({ data: [data], included: [] });
     return mapper.mapTeams()[0];
   }
 }

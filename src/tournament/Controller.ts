@@ -15,20 +15,20 @@ router.get('/', async (req: Request, res: Response) => {
   return res.status(200).json(tournaments);
 });
 
-router.get('/:id', async (req: Request, res: Response) => {
-  const id = +req.params.id;
-  if (Number.isNaN(id)) return res.status(400).json({ message: NOT_VALID_ID });
+router.get('/:tournamentId', async (req: Request, res: Response) => {
+  const tournamentId = +req.params.tournamentId;
+  if (Number.isNaN(tournamentId)) return res.status(400).json({ message: NOT_VALID_ID });
 
-  const { dates, maxAge } = await matchService.getTournamentDates(id);
+  const { dates, maxAge } = await matchService.getTournamentDates(tournamentId);
   res.setHeader('Cache-Control', `max-age=${maxAge}`);
   return res.status(200).json(dates);
 });
 
-router.get('/:id/groups', async (req: Request, res: Response) => {
-  const id = +req.params.id;
-  if (Number.isNaN(id)) return res.status(400).json({ message: NOT_VALID_ID });
+router.get('/:tournamentId/groups', async (req: Request, res: Response) => {
+  const tournamentId = +req.params.tournamentId;
+  if (Number.isNaN(tournamentId)) return res.status(400).json({ message: NOT_VALID_ID });
 
-  const { groups, maxAge } = await groupService.getGroups(id);
+  const { groups, maxAge } = await groupService.getGroups(tournamentId);
   res.setHeader('Cache-Control', `max-age=${maxAge}`);
   return res.status(200).json(groups);
 });

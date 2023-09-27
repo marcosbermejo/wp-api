@@ -1,6 +1,6 @@
-import { TeamApiResponseData } from '../team/ApiResponse';
+import { ClubApiResponseData, DelegationApiResponseData, TeamApiResponseData } from '../team/ApiResponse';
 import TeamMapper from '../team/Mapper';
-import Team from '../team/Model';
+import { Team } from '../team/Model';
 import { TournamentsApiResponse } from './ApiResponse';
 import Tournament from './Model';
 
@@ -42,7 +42,12 @@ export default class TournamentMapper {
       entity.relationships.registrable.data?.id === tournamentId
     ) as Array<TeamApiResponseData>;
 
-    const mapper = new TeamMapper({ data });
+    const included = this.data.included.filter(entity =>
+      entity.type === 'club' ||
+      entity.type === 'delegation'
+    ) as Array<ClubApiResponseData | DelegationApiResponseData>
+
+    const mapper = new TeamMapper({ data, included });
     return mapper.mapTeams();
   }
 }

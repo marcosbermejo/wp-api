@@ -48,7 +48,7 @@ const tournaments: TournamentsApiResponse = {
     {
       type: "delegation",
       id: "d2",
-      attributes: { name: "delegation 2" }
+      attributes: { name: "Delegation 2" }
     },
     {
       type: "club",
@@ -74,7 +74,7 @@ const tournaments: TournamentsApiResponse = {
         phone: "2222"
       },
       relationships: {
-        delegation: { data: { type: "delegation", id: "d1" } },
+        delegation: { data: { type: "delegation", id: "d2" } },
         manager: { data: { type: "manager", id: "m1" } }
       }
     },

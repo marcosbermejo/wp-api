@@ -1,4 +1,4 @@
-import Team from "../team/Model";
+import {Team} from "../team/Model";
 
 export interface Round {
   id: string;

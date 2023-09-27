@@ -2,6 +2,7 @@ import { ApiRelationship } from "../api/ApiResponse";
 
 export interface TeamsApiResponse {
   data: Array<TeamApiResponseData>;
+  included: Array<ClubApiResponseData | DelegationApiResponseData>
 }
 
 export interface TeamApiResponseData {
@@ -13,6 +14,29 @@ export interface TeamApiResponseData {
   relationships: {
     category: ApiRelationship,
     club: ApiRelationship,
-    registrable: ApiRelationship,
+    registrable: ApiRelationship
+  }
+}
+
+export interface ClubApiResponseData {
+  id: string;
+  type: 'club';
+  attributes: {
+    code: string
+    email: string
+    name: string
+    phone: string
+  },
+  relationships: {
+    delegation: ApiRelationship,
+    manager: ApiRelationship,
+  }
+}
+
+export interface DelegationApiResponseData {
+  id: string;
+  type: 'delegation';
+  attributes: {
+    name: string,
   }
 }

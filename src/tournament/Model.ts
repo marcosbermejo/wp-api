@@ -1,4 +1,4 @@
-import Team from '../team/Model';
+import {Team} from '../team/Model';
 
 export default interface Tournament {
   id: string;

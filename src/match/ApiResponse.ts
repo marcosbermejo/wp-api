@@ -18,8 +18,20 @@ export interface MatchesApiResponse {
   ResultApiResponseData |
   PeriodApiResponseData |
   TournamentApiResponseData |
-  CategoryApiResponseData
+  CategoryApiResponseData |
+  ProfileApiResponseData |
+  LicenseApiResponseData |
+  MatchrefereeApiResponseData
   >
+}
+
+export interface PaginatedMatchesApiResponse extends MatchesApiResponse {
+  links: {
+    first: string,
+    self: string,
+    next?: string,
+    prev?: string
+  }
 }
 
 export interface MatchApiResponseData {
@@ -42,6 +54,7 @@ export interface MatchApiResponseData {
     periods?: ApiRelationshipMultiple
     results?: ApiRelationshipMultiple
     teams?: ApiRelationshipMultiple
+    matchreferees?: ApiRelationshipMultiple
   }
 }
 
@@ -92,3 +105,52 @@ export interface FacilityApiResponseData {
     manager: ApiRelationship
   }
 }
+
+export interface ProfileApiResponseData {
+  id: string
+  type: 'profile'
+  attributes: {
+    birthdate: string | null
+    first_name: string | null
+    gender: string | null
+    last_name: string | null
+    nationality: string | null
+    number: string | null
+  }
+}
+
+export interface LicenseApiResponseData {
+  id: string
+  type: 'license'
+  attributes: {    
+    number: string | null
+    type: 'referee'
+  }
+  relationships: {
+    category: ApiRelationship
+    club: ApiRelationship
+    delegation: ApiRelationship
+    discipline: ApiRelationship
+    form: ApiRelationship
+    office: ApiRelationship
+    profile: ApiRelationship
+    refereecategory: ApiRelationship
+    season: ApiRelationship
+  }
+}
+
+export interface MatchrefereeApiResponseData {
+  id: string
+  type: 'matchreferee'
+  attributes: {    
+    attendance: 'confirmed'
+    published: boolean
+  }
+  relationships: {
+    license: ApiRelationship
+    match: ApiRelationship
+    office: ApiRelationship
+  }
+}
+
+

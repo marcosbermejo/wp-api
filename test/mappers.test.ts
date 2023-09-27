@@ -6,7 +6,7 @@ import TournamentMapper from '../src/tournament/Mapper';
 import MatchesMapper from '../src/match/Mapper';
 import Match, { Period } from '../src/match/Model';
 import { Round } from '../src/round/Model';
-import Team from '../src/team/Model';
+import { Club, Team } from '../src/team/Model';
 import Tournament from '../src/tournament/Model';
 import GroupsMapper from '../src/group/Mapper';
 import Group from '../src/group/Model';
@@ -34,6 +34,16 @@ const round = (id: number, groupId: number): Round => ({
   faceoffs: []
 })
 
+const club = (id: number, delegationId: number): Club => ({
+  id: `c${id}`,
+  name: `Club ${id}`,
+  image: `${process.env.CDN_URL}/logos/c${id}.jpg`,
+  delegation: {
+    id: `d${delegationId}`,
+    name: `Delegation ${delegationId}`
+  }
+})
+
 describe('Mappers', () => {
 
   it('Maps tournaments', () => {
@@ -46,7 +56,10 @@ describe('Mappers', () => {
       name: 'Tournament 1',
       status: 'in_progress',
       category: 'Category 1',
-      teams: [team(1, 1), team(2, 2)]
+      teams: [
+        { ...team(1, 1), club: club(1, 1) },
+        { ...team(2, 2), club: club(2, 2) },
+      ]
     }
 
     const tournament2: Tournament = {
@@ -54,7 +67,10 @@ describe('Mappers', () => {
       name: 'Tournament 2',
       status: 'in_progress',
       category: 'Category 2',
-      teams: [team(3, 1), team(4, 2)]
+      teams: [
+        { ...team(3, 1), club: club(1, 1) },
+        { ...team(4, 2), club: club(2, 2) },
+      ]
     }
 
     expect(tournaments).toEqual([tournament1, tournament2])
@@ -62,8 +78,8 @@ describe('Mappers', () => {
   });
 
   it('Matps matches without includes', () => {
-    const mapper = new MatchesMapper({...TournamentDatesFixture, included: []})
-    const matches = mapper.mapMatches()    
+    const mapper = new MatchesMapper({ ...TournamentDatesFixture, included: [] })
+    const matches = mapper.mapMatches()
 
     const match: Match = {
       id: 'm1',
@@ -71,6 +87,7 @@ describe('Mappers', () => {
       postponed: false,
       canceled: false,
       periods: [],
+      referees: [],
       facility: '',
       date: new Date(2023, 9, 11, 19, 15, 0)
     }
@@ -96,6 +113,7 @@ describe('Mappers', () => {
       finished: false,
       postponed: false,
       canceled: false,
+      referees: [{name: 'Marcos Bermejo', id: 'p1'}],
       periods: [period(1, 1, 2), period(2, 3, 4)],
       facility: 'Facility 1',
       date: new Date(2023, 9, 11, 19, 15, 0), //gmt
@@ -155,7 +173,7 @@ describe('Mappers', () => {
               winner: 'second',
               firstTeam: team(3, 3),
               secondTeam: team(4, 4)
-            }                       
+            }
           ]
         },
         {
@@ -171,7 +189,7 @@ describe('Mappers', () => {
               secondPreviousFaceoffId: 'f2',
               firstTeam: team(1, 1),
               secondTeam: team(4, 4)
-            }  
+            }
           ]
         }
       ],

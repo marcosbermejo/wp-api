@@ -1,5 +1,5 @@
 import { Round } from '../round/Model';
-import Team from '../team/Model';
+import {Team} from '../team/Model';
 import Tournament from '../tournament/Model';
 
 export default interface Match {
@@ -8,6 +8,7 @@ export default interface Match {
   postponed: boolean;
   canceled: boolean;
   periods: Period[];
+  referees: Profile[];
   facility?: string;
   date?: Date;
   homeTeam?: Team;
@@ -26,4 +27,9 @@ export interface Period {
   order: number;
   homeTeamResult: number;
   awayTeamResult: number;
+}
+
+export interface Profile {
+  id: string;
+  name: string;
 }

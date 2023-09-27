@@ -1,14 +1,17 @@
 import { parse } from 'date-fns';
 import { TeamApiResponseData } from '../team/ApiResponse';
 import TeamMapper from '../team/Mapper';
-import Team from '../team/Model';
+import {Team} from '../team/Model';
 import {
   FacilityApiResponseData,
+  LicenseApiResponseData,
   MatchesApiResponse,
+  MatchrefereeApiResponseData,
   PeriodApiResponseData,
+  ProfileApiResponseData,
   ResultApiResponseData,
 } from './ApiResponse';
-import Match, { Period } from './Model';
+import Match, { Period, Profile } from './Model';
 import { ApiRelationshipMultiple, CategoryApiResponseData } from '../api/ApiResponse';
 import { TournamentApiResponseData } from '../tournament/ApiResponse';
 import TournamentMapper from '../tournament/Mapper';
@@ -35,7 +38,8 @@ export default class MatchesMapper {
         finished,
         date: parseDate(datetime),
         facility: this.findFacility(relationships.facility.data?.id),
-        periods: relationships.periods ? this.findPeriods(relationships.periods, meta.home_team, meta.away_team) : []
+        periods: relationships.periods ? this.findPeriods(relationships.periods, meta.home_team, meta.away_team) : [],
+        referees: this.findReferees(id)
       };
 
       const round = this.findRound(relationships.round.data?.id)
@@ -60,6 +64,42 @@ export default class MatchesMapper {
 
       return match;
     });
+  }
+
+  private findReferees(matchId: string): Profile[] {
+    const referees: Profile[] = []
+    
+    const matchReferees = this.data.included.filter(entity =>
+      entity.type === 'matchreferee' &&
+      entity.relationships.match.data?.id === matchId
+    ) as MatchrefereeApiResponseData[];
+
+    matchReferees.forEach(({relationships: {license: { data }}}) => {
+      if (data) {
+        const license = this.data.included.find(entity => 
+          entity.type === 'license' &&
+          entity.id === data.id
+        ) as LicenseApiResponseData | undefined
+
+        if (license?.relationships.profile.data?.id) {
+          const licenseId = license.relationships.profile.data.id
+
+          const profile = this.data.included.find(entity =>
+            entity.type === 'profile' && entity.id === licenseId
+          ) as ProfileApiResponseData | undefined
+
+          if (profile){
+            const referee: Profile = {
+              id: profile.id,
+              name: profile.attributes.first_name + ' ' + profile.attributes.last_name
+            }
+            referees.push(referee)
+          }
+        }
+      }
+    })
+
+    return referees
   }
 
   private findRound(roundId?: string): Round | undefined {
@@ -99,7 +139,7 @@ export default class MatchesMapper {
 
     if (!data) return undefined;
 
-    const mapper = new TeamMapper({ data: [data] });
+    const mapper = new TeamMapper({ data: [data], included: [] });
     return mapper.mapTeams()[0];
   }
 
