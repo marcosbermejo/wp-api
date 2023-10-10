@@ -25,13 +25,13 @@ module.exports = {
   deploy : {
     production : {
       user: 'ubuntu',
-      host: '3.249.19.249',
+      host: '176.34.210.246',
       ref: 'origin/main',
       repo: 'git@github.com:marcosbermejo/wp-api.git',
       path: '/var/www/html/wp-api',
       key: '/home/marcos/ana.pem',
       ssh_options: ['ForwardAgent=yes'],
-      'pre-deploy-local': `scp -i /home/marcos/ana.pem .env ubuntu@3.249.19.249:/var/www/html/wp-api/source`,
+      'pre-deploy-local': `scp -i /home/marcos/ana.pem .env ubuntu@176.34.210.246:/var/www/html/wp-api/source`,
       'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --env production'
     },
     staging: {},
